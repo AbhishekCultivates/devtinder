@@ -3,16 +3,18 @@ const User = require("../models/user");
 
 const userAuth = async (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    // Check if token is in cookies or Authorization header (Bearer format)
+    const token =
+      req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      console.error("No token found in cookies");
-      return res.status(401).send("Please login!");
+      console.error("No token found in cookies or Authorization header");
+      return res.status(401).send("Please login! - stuck in production");
     }
 
-    console.log("Token found in cookies:", token);
+    console.log("Token found:", token);
 
-    // Attempt to verify the token using the secret stored in the environment variable
+    // Verify token
     let decodedObj;
     try {
       decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
@@ -30,7 +32,7 @@ const userAuth = async (req, res, next) => {
 
     const { _id } = decodedObj;
 
-    // Fetch the user from the database using the decoded token's user ID
+    // Fetch user from database
     console.log("Fetching user with _id:", _id);
     const user = await User.findById(_id);
 
@@ -39,7 +41,7 @@ const userAuth = async (req, res, next) => {
       return res.status(404).send("User not found");
     }
 
-    // Attach the user to the request object for use in subsequent middleware/routes
+    // Attach user to the request object
     req.user = user;
     console.log("User authenticated successfully:", user);
 
