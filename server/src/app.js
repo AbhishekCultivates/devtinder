@@ -4,6 +4,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
@@ -23,11 +24,13 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+const PORT = process.env.PORT || 7777;
+
 connectDB()
   .then(() => {
     console.log("Database connection established...");
-    app.listen(7777, () => {
-      console.log("Server is successfully listening on port 7777...");
+    app.listen(PORT, () => {
+      console.log(`Server is successfully listening on port ${PORT}...`);
     });
   })
   .catch((err) => {
