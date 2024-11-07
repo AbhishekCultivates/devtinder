@@ -15,7 +15,7 @@ authRouter.post("/signup", async (req, res) => {
     // Encrypt the password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    //   Creating a new instance of the User model
+    // Creating a new instance of the User model
     const user = new User({
       firstName,
       lastName,
@@ -34,8 +34,8 @@ authRouter.post("/signup", async (req, res) => {
       expires: new Date(Date.now() + 8 * 3600000), // 8 hours
       domain:
         process.env.NODE_ENV === "production"
-          ? ".devtinder-ujzk.onrender.com"
-          : "localhost", // Set the domain to handle production vs development
+          ? "devtinder-ujzk.onrender.com" // Set the domain to match the subdomain
+          : "localhost", // Use localhost for development
     });
 
     res.json({ message: "User added successfully!", data: savedUser });
@@ -66,8 +66,8 @@ authRouter.post("/login", async (req, res) => {
         expires: new Date(Date.now() + 8 * 3600000), // 8 hours
         domain:
           process.env.NODE_ENV === "production"
-            ? ".devtinder-ujzk.onrender.com"
-            : "localhost", // Set the domain to handle production vs development
+            ? "devtinder-ujzk.onrender.com" // Set the domain to match the subdomain
+            : "localhost", // Use localhost for development
       });
 
       res.send(user);
@@ -88,8 +88,8 @@ authRouter.post("/logout", async (req, res) => {
     sameSite: "None", // Needed for cross-site cookies
     domain:
       process.env.NODE_ENV === "production"
-        ? ".devtinder-ujzk.onrender.com"
-        : "localhost", // Set the domain for production vs development
+        ? "devtinder-ujzk.onrender.com" // Set the domain for production vs development
+        : "localhost", // Use localhost for development
   });
 
   res.send("Logout successful!");

@@ -9,7 +9,7 @@ const userAuth = async (req, res, next) => {
 
     if (!token) {
       console.error("No token found in cookies or Authorization header");
-      return res.status(401).send("Please login! - stuck in production");
+      return res.status(401).send("Please login! - No token found");
     }
 
     console.log("Token found:", token);
