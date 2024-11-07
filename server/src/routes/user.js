@@ -5,9 +5,17 @@ const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
-const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
+const USER_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "photoUrl",
+  "age",
+  "gender",
+  "about",
+  "skills",
+];
 
-// Get all the pending connection request for the loggedIn user
+// Get all the pending connection requests for the loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
@@ -16,17 +24,17 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
       toUserId: loggedInUser._id,
       status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA);
-    // }).populate("fromUserId", ["firstName", "lastName"]);
 
     res.json({
       message: "Data fetched successfully",
       data: connectionRequests,
     });
   } catch (err) {
-    req.statusCode(400).send("ERROR: " + err.message);
+    res.status(400).json({ message: err.message });
   }
 });
 
+// Get all the connections of the loggedIn user
 userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
@@ -40,8 +48,6 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
 
-    console.log(connectionRequests);
-
     const data = connectionRequests.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
         return row.toUserId;
@@ -51,10 +57,11 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
     res.json({ data });
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
+// Get a list of users not connected to the loggedIn user (feed)
 userRouter.get("/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
@@ -75,10 +82,8 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     });
 
     const users = await User.find({
-      $and: [
-        { _id: { $nin: Array.from(hideUsersFromFeed) } },
-        { _id: { $ne: loggedInUser._id } },
-      ],
+      _id: { $nin: Array.from(hideUsersFromFeed) },
+      _id: { $ne: loggedInUser._id },
     })
       .select(USER_SAFE_DATA)
       .skip(skip)
@@ -89,4 +94,5 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
 module.exports = userRouter;
