@@ -1,7 +1,6 @@
 import { useState } from "react";
 import UserCard from "./UserCard";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
@@ -17,11 +16,12 @@ const EditProfile = ({ user }) => {
   const [showToast, setShowToast] = useState(false);
 
   const saveProfile = async () => {
-    //Clear Errors
+    // Clear Errors
     setError("");
     try {
+      // Use the relative API path for the PATCH request
       const res = await axios.patch(
-        BASE_URL + "/profile/edit",
+        "/api/profile/edit", // Changed to relative path
         {
           firstName,
           lastName,
@@ -62,17 +62,17 @@ const EditProfile = ({ user }) => {
                   />
                 </label>
                 <label className="form-control w-full max-w-xs my-2">
-                  <label className="form-control w-full max-w-xs my-2">
-                    <div className="label">
-                      <span className="label-text">Last Name:</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={lastName}
-                      className="input input-bordered w-full max-w-xs"
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </label>
+                  <div className="label">
+                    <span className="label-text">Last Name:</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={lastName}
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </label>
+                <label className="form-control w-full max-w-xs my-2">
                   <div className="label">
                     <span className="label-text">Photo URL :</span>
                   </div>
@@ -140,4 +140,5 @@ const EditProfile = ({ user }) => {
     </>
   );
 };
+
 export default EditProfile;

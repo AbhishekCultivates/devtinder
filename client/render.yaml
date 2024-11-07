@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: frontend
+    env: node
+    buildCommand: "npm run build"
+    startCommand: "npm start"
+    staticPublishPath: "/build"
+    redirects:
+      - source: "/api/*"
+        destination: "https://devtinder-backend-hxdm.onrender.com/api/:splat"
+        status: 200

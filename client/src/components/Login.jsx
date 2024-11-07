@@ -18,33 +18,33 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
+        "/api/login", // Relative path used here
+        { emailId, password },
         { withCredentials: true }
       );
       dispatch(addUser(res.data));
-      return navigate("/");
+      navigate("/"); // Navigate to home on successful login
     } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
   const handleSignUp = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/signup",
+        "/api/signup", // Relative path used here
         { firstName, lastName, emailId, password },
         { withCredentials: true }
       );
       dispatch(addUser(res.data.data));
-      return navigate("/profile");
+      navigate("/profile"); // Navigate to profile on successful signup
     } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
+
+  // Helper function for handling input changes
+  const handleInputChange = (e, setter) => setter(e.target.value);
 
   return (
     <div className="flex justify-center my-10">
@@ -54,6 +54,7 @@ const Login = () => {
             {isLoginForm ? "Login" : "Sign Up"}
           </h2>
           <div>
+            {/* Signup specific fields */}
             {!isLoginForm && (
               <>
                 <label className="form-control w-full max-w-xs my-2">
@@ -64,7 +65,7 @@ const Login = () => {
                     type="text"
                     value={firstName}
                     className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => handleInputChange(e, setFirstName)}
                   />
                 </label>
                 <label className="form-control w-full max-w-xs my-2">
@@ -75,11 +76,12 @@ const Login = () => {
                     type="text"
                     value={lastName}
                     className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => handleInputChange(e, setLastName)}
                   />
                 </label>
               </>
             )}
+            {/* Common fields for both Login and Signup */}
             <label className="form-control w-full max-w-xs my-2">
               <div className="label">
                 <span className="label-text">Email ID:</span>
@@ -88,7 +90,7 @@ const Login = () => {
                 type="text"
                 value={emailId}
                 className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setEmailId(e.target.value)}
+                onChange={(e) => handleInputChange(e, setEmailId)}
               />
             </label>
             <label className="form-control w-full max-w-xs my-2">
@@ -99,11 +101,12 @@ const Login = () => {
                 type="password"
                 value={password}
                 className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handleInputChange(e, setPassword)}
               />
             </label>
           </div>
-          <p className="text-red-500">{error}</p>
+          {/* Display error message */}
+          {error && <p className="text-red-500">{error}</p>}
           <div className="card-actions justify-center m-2">
             <button
               className="btn btn-primary"
@@ -113,6 +116,7 @@ const Login = () => {
             </button>
           </div>
 
+          {/* Toggle between login and signup */}
           <p
             className="m-auto cursor-pointer py-2"
             onClick={() => setIsLoginForm((value) => !value)}
@@ -126,4 +130,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

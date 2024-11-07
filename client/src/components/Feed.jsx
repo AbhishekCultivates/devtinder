@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
 import { useEffect, useState } from "react";
@@ -12,15 +11,13 @@ const Feed = () => {
   const [error, setError] = useState(null);
 
   const getFeed = async () => {
-    if (feed) return; // Don't fetch if already in the store
+    if (feed.length > 0) return; // Don't fetch if feed is already in the store
     try {
-      const res = await axios.get(BASE_URL + "/feed", {
-        withCredentials: true,
-      });
+      const res = await axios.get("/api/feed", { withCredentials: true }); // Updated to use relative path
       dispatch(addFeed(res?.data?.data));
       setLoading(false);
     } catch (err) {
-      setError("Error fetching feed, please try again."+err);
+      setError("Error fetching feed, please try again." + err);
       setLoading(false);
     }
   };

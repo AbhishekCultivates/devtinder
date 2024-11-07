@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
@@ -11,13 +10,17 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+      // Update to use a relative path for logout
+      await axios.post("/api/logout", {}, { withCredentials: true });
       dispatch(removeUser());
-      return navigate("/login");
+      navigate("/login");
     } catch (err) {
-      // Error logic maybe redirect to error page
+      alert("Logout failed, please try again.");
     }
   };
+
+  const defaultPhotoUrl = "path/to/default-avatar.png"; // Set a fallback image for users without a profile photo
+  const userPhotoUrl = user?.photoUrl || defaultPhotoUrl;
 
   return (
     <div className="navbar bg-base-300">
@@ -33,10 +36,11 @@ const NavBar = () => {
             <div
               tabIndex={0}
               role="button"
+              aria-label="User menu"
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img alt="user photo" src={user.photoUrl} />
+                <img alt="user photo" src={userPhotoUrl} />
               </div>
             </div>
             <ul
@@ -52,7 +56,6 @@ const NavBar = () => {
               <li>
                 <Link to="/connections">Connections</Link>
               </li>
-
               <li>
                 <Link to="/requests">Requests</Link>
               </li>
@@ -66,4 +69,5 @@ const NavBar = () => {
     </div>
   );
 };
+
 export default NavBar;
