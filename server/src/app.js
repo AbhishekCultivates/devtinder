@@ -14,6 +14,11 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Welcome message
+app.get("/", (req, res) => {
+  res.send("Welcome to the devTinder backend API!");
+});
+
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
