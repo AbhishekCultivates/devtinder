@@ -22,11 +22,11 @@ app.use(cookieParser());
 // Serve static files from the React app (frontend)
 if (process.env.NODE_ENV === "production") {
   // Serve static files from 'client/dist' after building frontend
-  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.use(express.static(path.join(__dirname, "../../client/dist")));
 
   // Catch-all route to serve the frontend (React app) for all routes
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+    res.sendFile(path.join(__dirname, "../../client/dist", "index.html"));
   });
 }
 
