@@ -22,7 +22,19 @@ app.use(cookieParser());
 // Serve static files from the React app (frontend)
 if (process.env.NODE_ENV === "production") {
   // Serve static files from 'client/dist' after building frontend
-  app.use(express.static(path.join(__dirname, "../../client/dist")));
+  app.use(
+    express.static(path.join(__dirname, "../../client/dist"), {
+      setHeaders: (res) => {
+        // Cache-busting headers
+        res.setHeader(
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate, proxy-revalidate"
+        );
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+      },
+    })
+  );
 
   // Catch-all route to serve the frontend (React app) for all routes
   app.get("*", (req, res) => {
