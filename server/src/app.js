@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 // Serve static files from the React app (frontend)
 if (process.env.NODE_ENV === "production") {
-  // Serve static files from 'client/dist' after building the frontend
+  // Serve static files from 'client/dist' after building frontend
   app.use(express.static(path.join(__dirname, "../client/dist")));
 
   // Catch-all route to serve the frontend (React app) for all routes
@@ -54,7 +54,7 @@ connectDB()
   .then(() => {
     console.log("Database connection established...");
     app.listen(PORT, () => {
-      console.log(`Server is successfully listening on port ${PORT}...`);
+      console.log(Server is successfully listening on port ${PORT}...);
     });
   })
   .catch((err) => {
