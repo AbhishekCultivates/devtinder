@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 // Serve static files from the React app (frontend)
 if (process.env.NODE_ENV === "production") {
-  // Serve static files from 'client/dist' after building frontend
+  // Serve static files from 'client/dist' after building the frontend
   app.use(express.static(path.join(__dirname, "../client/dist")));
 
   // Catch-all route to serve the frontend (React app) for all routes
