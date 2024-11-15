@@ -42,10 +42,10 @@ const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 
 // API routes
-app.use("/api/auth", authRouter);
-app.use("/api/profile", profileRouter);
-app.use("/api/request", requestRouter);
-app.use("/api/user", userRouter);
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
 
 const PORT = process.env.PORT || 7777;
 
