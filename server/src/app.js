@@ -54,7 +54,7 @@ connectDB()
   .then(() => {
     console.log("Database connection established...");
     app.listen(PORT, () => {
-      console.log(Server is successfully listening on port ${PORT}...);
+      console.log(`Server is successfully listening on port ${PORT}...`);
     });
   })
   .catch((err) => {
