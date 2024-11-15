@@ -10,7 +10,8 @@
     "build": "npm run build:client && npm run build:server", 
     "build:client": "npm --prefix client run build",  
     "build:server": "echo 'No build step for server required'", 
-    "preview": "npm --prefix client run preview"
+    "preview": "npm --prefix client run preview",
+    "deploy": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",
