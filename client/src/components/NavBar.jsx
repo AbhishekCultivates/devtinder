@@ -15,7 +15,11 @@ const NavBar = () => {
       dispatch(removeUser());
       return navigate("/login");
     } catch (err) {
-      // Error logic maybe redirect to error page
+      console.error("Error during logout:", err);
+      // Optional: Redirect to an error page or display an error message
+      navigate("/error", {
+        state: { message: "Failed to logout. Please try again later." },
+      });
     }
   };
 

@@ -14,8 +14,9 @@ authRouter.post("/signup", async (req, res) => {
 
     // Encrypt the password
     const passwordHash = await bcrypt.hash(password, 10);
+    console.log(passwordHash);
 
-    // Creating a new instance of the User model
+    //   Creating a new instance of the User model
     const user = new User({
       firstName,
       lastName,
@@ -26,19 +27,11 @@ authRouter.post("/signup", async (req, res) => {
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
 
-    // Set the cookie with secure attributes in production
     res.cookie("token", token, {
-      httpOnly: true, // Make the cookie inaccessible to JavaScript
-      secure: process.env.NODE_ENV === "production", // Secure cookies in production
-      sameSite: "None", // Needed for cross-site cookies
-      expires: new Date(Date.now() + 8 * 3600000), // 8 hours
-      domain:
-        process.env.NODE_ENV === "production"
-          ? "devtinder-ujzk.onrender.com" // Set the domain to match the subdomain
-          : "localhost", // Use localhost for development
+      expires: new Date(Date.now() + 8 * 3600000),
     });
 
-    res.json({ message: "User added successfully!", data: savedUser });
+    res.json({ message: "User Added successfully!", data: savedUser });
   } catch (err) {
     res.status(400).send("ERROR : " + err.message);
   }
@@ -52,24 +45,14 @@ authRouter.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("Invalid credentials");
     }
-
     const isPasswordValid = await user.validatePassword(password);
 
     if (isPasswordValid) {
       const token = await user.getJWT();
 
-      // Set the cookie with secure attributes in production
       res.cookie("token", token, {
-        httpOnly: true, // Make the cookie inaccessible to JavaScript
-        secure: process.env.NODE_ENV === "production", // Secure cookies in production
-        sameSite: "None", // Needed for cross-site cookies
-        expires: new Date(Date.now() + 8 * 3600000), // 8 hours
-        domain:
-          process.env.NODE_ENV === "production"
-            ? "devtinder-ujzk.onrender.com" // Set the domain to match the subdomain
-            : "localhost", // Use localhost for development
+        expires: new Date(Date.now() + 8 * 3600000),
       });
-
       res.send(user);
     } else {
       throw new Error("Invalid credentials");
@@ -80,19 +63,10 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-  // Clear the cookie by setting an expired date
   res.cookie("token", null, {
-    expires: new Date(Date.now() - 1000), // Expire the cookie immediately
-    httpOnly: true, // Make sure the cookie is not accessible via JavaScript
-    secure: process.env.NODE_ENV === "production", // Secure cookies in production
-    sameSite: "None", // Needed for cross-site cookies
-    domain:
-      process.env.NODE_ENV === "production"
-        ? "devtinder-ujzk.onrender.com" // Set the domain for production vs development
-        : "localhost", // Use localhost for development
+    expires: new Date(Date.now()),
   });
-
-  res.send("Logout successful!");
+  res.send("Logout Successful!!");
 });
 
 module.exports = authRouter;
